@@ -9,6 +9,6 @@ DocDate é um sistema médico para agendamento de consultas, conectando paciente
 ## Como rodar localmente
 
 ```bash
-git clone https://github.com/seunome/docdate.git
+git clone https://github.com/zecarioco/DocDate
 cd docdate
 python manage.py runserver
