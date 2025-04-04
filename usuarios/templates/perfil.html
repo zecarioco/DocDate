@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Perfil - DocDate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Meu Perfil</h3>
+                    <a href="{% url 'editar_perfil' %}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" 
+                             style="width: 120px; height: 120px; font-size: 3rem;">
+                            {{ user.first_name|first }}{{ user.last_name|first }}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                        <p class="text-muted">{{ user.email }}</p>
+                        <span class="badge bg-primary">
+                            {{ user.get_tipo_usuario_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    {% if user.tipo_usuario == 'medico' %}
+                        <div class="col-md-6">
+                            <h5><i class="bi bi-card-heading"></i> CRM</h5>
+                            <p>{{ user.medico.crm }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="bi bi-building"></i> Clínica</h5>
+                            <p>{{ user.medico.clinica|default:"-" }}</p>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <h5><i class="bi bi-star"></i> Especialidades</h5>
+                            <p>
+                                {% for esp in user.medico.especialidades.all %}
+                                    <span class="badge bg-secondary me-1">{{ esp.nome }}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="col-md-6">
+                            <h5><i class="bi bi-calendar"></i> Data de Nascimento</h5>
+                            <p>{{ user.paciente.data_nascimento|date:"d/m/Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="bi bi-telephone"></i> Telefone</h5>
+                            <p>{{ user.paciente.telefone }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Excluir Consulta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h2>Tem certeza que deseja excluir esta consulta?</h2>
+    <p><strong>Paciente:</strong> {{ consulta.paciente }}</p>
+    <p><strong>Médico:</strong> {{ consulta.medico }}</p>
+    <p><strong>Data:</strong> {{ consulta.data_consulta }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <a href="{% url 'listar_consultas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>

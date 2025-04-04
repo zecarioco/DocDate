@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}DocDate - Seu Sistema Médico{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="site-description">
+        <h2 class="mb-3">Bem-vindo ao DocDate</h2>
+        <p class="lead">
+            O DocDate é um sistema completo para gestão de consultas médicas,
+            conectando pacientes e médicos de forma eficiente e segura.
+        </p>
+        <p>
+            Nossa plataforma oferece agendamento online, prontuários eletrônicos
+            e ferramentas para melhorar a experiência em saúde.
+        </p>
+        {% if not user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg me-2">Cadastre-se</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

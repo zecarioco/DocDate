@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hidden-form { display: none; }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h2 class="card-title text-center mb-4">Cadastro</h2>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Usuário*</label>
+                                <select class="form-select" name="tipo_usuario" id="tipo_usuario" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="paciente">Paciente</option>
+                                    <option value="medico">Médico</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Username*</label>
+                                <input type="text" class="form-control" name="username" 
+                                       value="{{ form_data.username }}"
+                                       pattern="[a-zA-Z0-9_]+"
+                                       title="Apenas letras, números e underscores (_)" 
+                                       required>
+                                <small class="text-muted">Apenas letras (a-z), números (0-9) e underscores (_)</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Primeiro Nome*</label>
+                                <input type="text" class="form-control" name="primeiro_nome" 
+                                       value="{{ form_data.primeiro_nome }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Sobrenome*</label>
+                                <input type="text" class="form-control" name="ultimo_nome" 
+                                       value="{{ form_data.ultimo_nome }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email*</label>
+                                <input type="email" class="form-control" name="email" 
+                                       value="{{ form_data.email }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Password*</label>
+                                <input type="password" class="form-control" name="password" 
+                                       minlength="8" required>
+                                <small class="text-muted">Mínimo 8 caracteres</small>
+                            </div>
+                            
+                            <div id="medico-form" class="hidden-form">
+                                <h5 class="mt-4 mb-3">Dados do Médico</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">CRM*</label>
+                                    <input type="text" class="form-control" name="crm" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Clínica</label>
+                                    <input type="text" class="form-control" name="clinica">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Especialidades*</label>
+                                    <select class="form-select" name="especialidades" multiple required>
+                                        {% for esp in especialidades %}
+                                            <option value="{{ esp.id }}">{{ esp.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="text-muted">Segure Ctrl para selecionar múltiplas</small>
+                                </div>
+                            </div>
+                            
+                            <div id="paciente-form" class="hidden-form">
+                                <h5 class="mt-4 mb-3">Dados do Paciente</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Nascimento*</label>
+                                    <input type="date" class="form-control" name="data_nascimento" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone*</label>
+                                    <input type="tel" class="form-control" name="telefone" required>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 mt-3">Cadastrar</button>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{% url 'login' %}">Já tem uma conta? Faça login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('tipo_usuario').addEventListener('change', function() {
+            const tipo = this.value;
+            document.getElementById('medico-form').style.display = tipo === 'medico' ? 'block' : 'none';
+            document.getElementById('paciente-form').style.display = tipo === 'paciente' ? 'block' : 'none';
+            
+            const medicoFields = document.querySelectorAll('#medico-form [required]');
+            const pacienteFields = document.querySelectorAll('#paciente-form [required]');
+            
+            medicoFields.forEach(field => field.required = tipo === 'medico');
+            pacienteFields.forEach(field => field.required = tipo === 'paciente');
+        });
+
+        document.querySelector('input[name="username"]').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '');
+            this.value = this.value.toLowerCase();
+        });
+    </script>
+</body>
+</html>
