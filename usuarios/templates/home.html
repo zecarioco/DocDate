@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}DocDate - Seu Sistema Médico{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="site-description">
-        <h2 class="mb-3">Bem-vindo ao DocDate</h2>
-        <p class="lead">
-            O DocDate é um sistema completo para gestão de consultas médicas,
-            conectando pacientes e médicos de forma eficiente e segura.
-        </p>
-        <p>
-            Nossa plataforma oferece agendamento online, prontuários eletrônicos
-            e ferramentas para melhorar a experiência em saúde.
-        </p>
-        {% if not user.is_authenticated %}
-            <div class="mt-4">
-                <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg me-2">Cadastre-se</a>
-                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
-            </div>
-        {% endif %}
+<div class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2 class="mb-4 text-danger fw-bold">Bem-vindo ao <span class="text-dark">DocDate</span></h2>
+            <p class="lead mb-3 fw-semibold">
+                O <span class="text-danger">DocDate</span> é um sistema completo para gestão de consultas médicas,
+                conectando pacientes e médicos de forma eficiente e segura.
+            </p>
+            <p class="mb-4">
+                Nossa plataforma oferece <span class="fw-semibold">agendamento online</span>,
+                <span class="fw-semibold">prontuários eletrônicos</span> e ferramentas
+                para melhorar a experiência em saúde.
+            </p>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <img src="{% static 'img/doctors.png' %}" alt="Médico ilustrativo" class="img-fluid" style="max-height: 350px;">
+        </div>
     </div>
 </div>
 {% endblock %}

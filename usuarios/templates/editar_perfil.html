@@ -3,98 +3,91 @@
 {% block title %}Editar Perfil - DocDate{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow">
-                <div class="card-header bg-white">
-                    <h3 class="mb-0">Editar Perfil</h3>
-                </div>
-                <div class="card-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                        {% endfor %}
-                    {% endif %}
+<div class="d-flex justify-content-center py-4">
+    <div class="bg-white shadow p-4 rounded-4" style="max-width: 900px; width: 100%;">
+        <h3 class="mb-4 text-danger fw-bold">Editar Perfil</h3>
 
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <h4 class="mb-3">Informações Pessoais</h4>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Primeiro Nome*</label>
-                                <input type="text" class="form-control" name="primeiro_nome" value="{{ user.first_name }}" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Último Nome*</label>
-                                <input type="text" class="form-control" name="ultimo_nome" value="{{ user.last_name }}" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Email*</label>
-                            <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="form-label">Nova Senha (opcional)</label>
-                            <input type="password" class="form-control" name="nova_senha" placeholder="Mínimo 8 caracteres" minlength="8">
-                            <small class="text-muted">Deixe em branco para manter a atual</small>
-                        </div>
-                        
-                        {% if user.tipo_usuario == 'medico' %}
-                            <h4 class="mb-3">Informações Profissionais</h4>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">CRM*</label>
-                                    <input type="text" class="form-control" name="crm" value="{{ user.medico.crm }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Clínica</label>
-                                    <input type="text" class="form-control" name="clinica" value="{{ user.medico.clinica }}">
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Especialidades*</label>
-                                <select class="form-select" name="especialidades" multiple required>
-                                    {% for esp in especialidades %}
-                                        <option value="{{ esp.id }}" {% if esp in user.medico.especialidades.all %}selected{% endif %}>{{ esp.nome }}</option>
-                                    {% endfor %}
-                                </select>
-                                <small class="text-muted">Segure Ctrl para múltipla seleção</small>
-                            </div>
-                        
-                        {% elif user.tipo_usuario == 'paciente' %}
-                            <h4 class="mb-3">Informações Pessoais</h4>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Data de Nascimento*</label>
-                                    <input type="date" class="form-control" name="data_nascimento" value="{{ user.paciente.data_nascimento|date:'Y-m-d' }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Telefone*</label>
-                                    <input type="tel" class="form-control" name="telefone" value="{{ user.paciente.telefone }}" required>
-                                </div>
-                            </div>
-                        {% endif %}
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{% url 'perfil' %}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Salvar Alterações
-                            </button>
-                        </div>
-                    </form>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <h4 class="mb-3 fw-bold">Informações Pessoais</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Primeiro Nome*</label>
+                    <input type="text" class="form-control rounded-3" name="primeiro_nome" value="{{ user.first_name }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Último Nome*</label>
+                    <input type="text" class="form-control rounded-3" name="ultimo_nome" value="{{ user.last_name }}" required>
                 </div>
             </div>
-        </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Email*</label>
+                <input type="email" class="form-control rounded-3" name="email" value="{{ user.email }}" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label">Nova Senha (opcional)</label>
+                <input type="password" class="form-control rounded-3" name="nova_senha" placeholder="Mínimo 8 caracteres" minlength="8">
+                <small class="text-muted">Deixe em branco para manter a atual</small>
+            </div>
+            
+            {% if user.tipo_usuario == 'medico' %}
+                <h4 class="mb-3 fw-bold">Informações Profissionais</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">CRM*</label>
+                        <input type="text" class="form-control rounded-3" name="crm" value="{{ user.medico.crm }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Clínica</label>
+                        <input type="text" class="form-control rounded-3" name="clinica" value="{{ user.medico.clinica }}">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Especialidades*</label>
+                    <select class="form-select rounded-3" name="especialidades" multiple required>
+                        {% for esp in especialidades %}
+                            <option value="{{ esp.id }}" {% if esp in user.medico.especialidades.all %}selected{% endif %}>{{ esp.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Segure Ctrl para múltipla seleção</small>
+                </div>
+            
+            {% elif user.tipo_usuario == 'paciente' %}
+                <h4 class="mb-3 fw-bold">Informações Pessoais</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Data de Nascimento*</label>
+                        <input type="date" class="form-control rounded-3" name="data_nascimento" value="{{ user.paciente.data_nascimento|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Telefone*</label>
+                        <input type="tel" class="form-control rounded-3" name="telefone" value="{{ user.paciente.telefone }}" required>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'perfil' %}" class="btn btn-outline-secondary rounded-3">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-danger text-white rounded-3">
+                    <i class="bi bi-check-circle"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
