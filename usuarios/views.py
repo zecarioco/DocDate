@@ -7,6 +7,10 @@ from .models import Paciente, Medico
 from medicos.models import Especialidade
 from django.contrib.auth import update_session_auth_hash
 import re
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from geopy.geocoders import Nominatim
 
 Usuario = get_user_model()
 

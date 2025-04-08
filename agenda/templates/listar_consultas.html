@@ -3,31 +3,41 @@
 {% block title %}Minhas Consultas{% endblock %}
 
 {% block content %}
-    <h2 class="mb-4 text-center">Minhas Consultas</h2>
+    <h2 class="text-center fw-semibold mb-5" style="font-family: 'Inter', sans-serif; color: #c82333;">
+        Minhas Consultas
+    </h2>
 
     {% if consultas %}
-        <div class="row">
+        <div class="row g-4">
             {% for consulta in consultas %}
-            <div class="col-md-6">
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            {% if request.user.tipo_usuario == 'paciente' %}
-                                {{ consulta.medico.especialidades.all.0 }} - Dr. {{ consulta.medico.usuario.get_full_name }}
-                            {% else %}
-                                Paciente: {{ consulta.paciente.get_full_name }}
-                            {% endif %}
-                        </h5>
-                        <p class="card-text"><strong>Data:</strong> {{ consulta.data_consulta|date:"d/m/Y" }}</p>
-                        <p class="card-text"><strong>Horário:</strong> {{ consulta.data_consulta|time:"H:i" }}</p>
-                        <p class="card-text"><strong>Status:</strong> <span class="badge bg-info">{{ consulta.get_status_display }}</span></p>
-                        <a href="{% url 'editar_consulta' consulta.id %}" class="btn btn-primary btn-sm">Editar Consulta</a>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4" style="background-color: #fff0f0;">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold" style="color: #2e2e2e;">
+                                {% if request.user.tipo_usuario == 'paciente' %}
+                                    {{ consulta.medico.especialidades.all.0 }} - Dr. {{ consulta.medico.usuario.get_full_name }}
+                                {% else %}
+                                    Paciente: {{ consulta.paciente.get_full_name }}
+                                {% endif %}
+                            </h5>
+                            <p class="card-text mb-1 text-dark"><strong>Data:</strong> {{ consulta.data_consulta|date:"d/m/Y" }}</p>
+                            <p class="card-text mb-1 text-dark"><strong>Horário:</strong> {{ consulta.data_consulta|time:"H:i" }}</p>
+                            <p class="card-text mb-3 text-dark">
+                                <strong>Status:</strong> 
+                                <span class="badge badge-docdate">{{ consulta.get_status_display }}</span>
+                            </p>
+                            <a href="{% url 'editar_consulta' consulta.id %}" 
+                               class="btn btn-outline-danger fw-semibold rounded-pill px-4">
+                                Editar Consulta
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
     {% else %}
-        <p class="text-center">Você não tem consultas agendadas.</p>
+        <p class="text-center text-muted mt-5" style="font-family: 'Inter', sans-serif;">
+            Você não tem consultas agendadas.
+        </p>
     {% endif %}
 {% endblock %}
