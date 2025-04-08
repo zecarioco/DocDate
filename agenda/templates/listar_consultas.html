@@ -24,7 +24,13 @@
                             <p class="card-text mb-1 text-dark"><strong>Horário:</strong> {{ consulta.data_consulta|time:"H:i" }}</p>
                             <p class="card-text mb-3 text-dark">
                                 <strong>Status:</strong> 
-                                <span class="badge badge-docdate">{{ consulta.get_status_display }}</span>
+                                {% if consulta.status == "agendada" %}
+                                    <span class="badge badge-docdate bg-success">{{ consulta.get_status_display }}</span>
+                                {% elif consulta.status == "realizada" %}
+                                    <span class="badge badge-docdate bg-warning text-dark">{{ consulta.get_status_display }}</span>
+                                {% elif consulta.status == "cancelada" %}
+                                    <span class="badge badge-docdate bg-danger">{{ consulta.get_status_display }}</span>
+                                {% endif %}
                             </p>
                             <a href="{% url 'editar_consulta' consulta.id %}" 
                                class="btn btn-outline-danger fw-semibold rounded-pill px-4">
