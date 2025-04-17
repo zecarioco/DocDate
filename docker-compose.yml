@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: bddocdate
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - docnet
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - media:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: bddocdate
+      DB_USER: postgres
+      DB_PASS: 12345678
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+    networks:
+      - docnet
+
+volumes:
+  postgres_data:
+  media:
+
+networks:
+  docnet:
