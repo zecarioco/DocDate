@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .card-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 1rem;
+        background-color: #ffb4b4;
+    }
+
+    .card-hover:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    {% if medicos %}
+        <div class="row">
+            {% for medico in medicos %}
+                <div class="col-md-6 mb-4">
+                    <a href="" class="text-decoration-none text-dark">
+                        <div class="card border-0 shadow-sm hover-shadow card-hover">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-3 text-center p-3">
+                                    <img src="{% static 'img/logo.png' %}" alt="Foto de perfil"
+                                         class="rounded-circle img-fluid" style="max-width: 80px;">
+                                </div>
+                                <div class="col-9">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-1 fw-bold text-danger">
+                                            {{ medico.usuario.first_name }} {{ medico.usuario.last_name }}
+                                        </h5>
+                                        <span class="badge badge-docdate">CRM: {{ medico.crm }}</span>
+                                        <p class="mb-1 mt-2">
+                                            {% for esp in medico.especialidades.all %}
+                                                {{ esp.nome }}{% if not forloop.last %}, {% endif %}
+                                            {% empty %}
+                                                Nenhuma
+                                            {% endfor %}
+                                        </p>
+                                        {% if medico.clinica %}
+                                            <p class="mb-1">Clínica {{ medico.clinica }}</p>
+                                        {% endif %}
+                                        {% if medico.usuario.cidade or medico.usuario.estado %}
+                                            <p class="mb-0">
+                                                <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
+                                                {{ medico.usuario.cidade }}{% if medico.usuario.estado %} - {{ medico.usuario.estado }}{% endif %}
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Nenhum médico encontrado.</p>
+    {% endif %}
+</div>
+{% endblock %}

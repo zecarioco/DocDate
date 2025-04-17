@@ -1,7 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
 from medicos.models import Especialidade
+
+class Cidade(models.Model):
+    nome = models.CharField(max_length=100)
+    estado = models.CharField(max_length=100, null=True, blank=True)
+    pais = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        if self.estado and self.pais:
+            return f"{self.nome}, {self.estado} - {self.pais}"
+        return self.nome
 
 class Usuario(AbstractUser):
     TIPO_USUARIO_CHOICES = [
@@ -10,12 +19,11 @@ class Usuario(AbstractUser):
     ]
     tipo_usuario = models.CharField(max_length=10, choices=TIPO_USUARIO_CHOICES)
     email = models.EmailField(max_length=255, unique=True)
-    cidade = models.CharField(max_length=100, null=True, blank=True)
-    estado = models.CharField(max_length=100, null=True, blank=True)
-    pais = models.CharField(max_length=100, null=True, blank=True)
+    cidade = models.ForeignKey(Cidade, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.get_full_name() or self.username
+
 
 class Paciente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
@@ -24,6 +32,7 @@ class Paciente(models.Model):
 
     def __str__(self):
         return f'{self.usuario.first_name} {self.usuario.last_name}'
+
 
 class Medico(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
