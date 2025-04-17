@@ -5,6 +5,7 @@ DocDate é um sistema médico para agendamento de consultas, conectando paciente
 ## Tecnologias
 - Django
 - Bootstrap 5
+- Docker
 
 ## Como rodar localmente
 
