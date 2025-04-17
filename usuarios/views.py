@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from .models import Paciente, Medico
+from .models import Paciente, Medico, Cidade
 from medicos.models import Especialidade
 from django.contrib.auth import update_session_auth_hash
 import re
@@ -26,17 +26,20 @@ def register_view(request):
         tipo_usuario = request.POST.get('tipo_usuario')
         primeiro_nome = request.POST.get('primeiro_nome', '').strip()
         ultimo_nome = request.POST.get('ultimo_nome', '').strip()
+        cidade_id = request.POST.get('cidade')
 
-        if not all([username, email, password, tipo_usuario]):
+        if not all([username, email, password, tipo_usuario, cidade_id]):
             messages.error(request, "Todos os campos obrigatórios devem ser preenchidos!")
             return redirect('cadastro')
         
         try:
             username = validate_username(username)
-            
+
             if len(password) < 8:
                 messages.error(request, "A senha deve ter pelo menos 8 caracteres")
                 return redirect('cadastro')
+
+            cidade = Cidade.objects.get(pk=cidade_id)
 
             user = Usuario.objects.create_user(
                 username=username,
@@ -44,7 +47,8 @@ def register_view(request):
                 password=password,
                 tipo_usuario=tipo_usuario,
                 first_name=primeiro_nome,
-                last_name=ultimo_nome
+                last_name=ultimo_nome,
+                cidade=cidade
             )
             
             if tipo_usuario == 'medico':
@@ -65,17 +69,21 @@ def register_view(request):
             
             messages.success(request, "Cadastro realizado com sucesso!")
             return redirect('login')
-            
+        
+        except Cidade.DoesNotExist:
+            messages.error(request, "Cidade inválida selecionada.")
         except ValidationError as e:
             messages.error(request, str(e))
         except Exception as e:
             messages.error(request, f"Erro durante o cadastro: {str(e)}")
-        
+
         return redirect('cadastro')
-    
+
     especialidades = Especialidade.objects.all().order_by('nome')
+    cidades = Cidade.objects.all().order_by('nome')
     return render(request, 'cadastro.html', {
         'especialidades': especialidades,
+        'cidades': cidades,
         'form_data': {
             'username': request.POST.get('username', ''),
             'email': request.POST.get('email', ''),

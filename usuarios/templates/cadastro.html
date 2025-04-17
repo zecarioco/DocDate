@@ -72,6 +72,16 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label class="form-label fw-semibold">Cidade*</label>
+                                    <select class="form-select" name="cidade" required>
+                                        <option value="">Selecione uma cidade...</option>
+                                        {% for cidade in cidades %}
+                                            <option value="{{ cidade.id }}">{{ cidade.nome }}{% if cidade.estado %}, {{ cidade.estado }}{% endif %}{% if cidade.pais %} - {{ cidade.pais }}{% endif %}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>                                
+
+                                <div class="mb-3">
                                     <label class="form-label fw-semibold">Email*</label>
                                     <input type="email" class="form-control" name="email" 
                                            value="{{ form_data.email }}" required>
