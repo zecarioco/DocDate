@@ -1,0 +1,19 @@
+# Imagem base com Python
+FROM python:3.11
+
+# Definindo diretório de trabalho
+WORKDIR /app
+
+COPY requirements.txt .
+
+# Copiando os arquivos
+COPY ../ .
+
+# Instalando dependências
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Rodando as migrações e iniciando o servidor
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# Expondo a porta do Django
+EXPOSE 8000
