@@ -13,4 +13,4 @@ DocDate é um sistema médico para agendamento de consultas, conectando paciente
 git clone https://github.com/zecarioco/DocDate
 cd docdate
 docker-compose up --build -d
-docker-compose exec backend python manage.py migrate
+docker-compose exec web python manage.py migrate
