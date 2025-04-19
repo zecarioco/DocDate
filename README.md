@@ -8,6 +8,7 @@ DocDate é um sistema médico para agendamento de consultas, conectando paciente
 - Docker
 
 ## Como rodar localmente
+Certifique-se de que o Docker Engine está instalado e aberto.
 
 ```bash
 git clone https://github.com/zecarioco/DocDate
