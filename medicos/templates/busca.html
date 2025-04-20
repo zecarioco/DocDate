@@ -1,26 +1,42 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
-<style>
-    .card-hover {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border-radius: 1rem;
-        background-color: #ffb4b4;
-    }
-
-    .card-hover:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-    }
-</style>
-
 <div class="container mt-5">
+    <form method="get" action="{% url 'buscar_medicos' %}">
+        <input type="hidden" name="q" value="{{ request.GET.q }}">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="especialidade" class="form-label">Especialidade</label>
+                <select class="form-select" name="especialidade">
+                    <option value="">Escolha uma especialidade</option>
+                    {% for especialidade in especialidades %}
+                        <option value="{{ especialidade.id }}" {% if request.GET.especialidade == especialidade.id|stringformat:"s" %}selected{% endif %}>{{ especialidade.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <select class="form-select" name="cidade" id="cidade">
+                    <option value="">Escolha uma cidade</option>
+                    {% for cidade in cidades %}
+                        <option value="{{ cidade.id }}" {% if request.GET.cidade == cidade.id|stringformat:"s" %}selected{% endif %}>{{ cidade }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-danger">Buscar</button>
+            </div>
+        </div>
+    </form>
+
     {% if medicos %}
-        <div class="row">
+        <div class="row mt-4">
             {% for medico in medicos %}
                 <div class="col-md-6 mb-4">
-                    <a href="" class="text-decoration-none text-dark">
+                    <a href="{% url 'perfil_medico' medico_id=medico.id %}" class="text-decoration-none text-dark">
                         <div class="card border-0 shadow-sm hover-shadow card-hover">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3 text-center p-3">
@@ -43,10 +59,10 @@
                                         {% if medico.clinica %}
                                             <p class="mb-1">Clínica {{ medico.clinica }}</p>
                                         {% endif %}
-                                        {% if medico.usuario.cidade or medico.usuario.estado %}
+                                        {% if medico.usuario.cidade %}
                                             <p class="mb-0">
                                                 <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
-                                                {{ medico.usuario.cidade }}{% if medico.usuario.estado %} - {{ medico.usuario.estado }}{% endif %}
+                                                {{ medico.usuario.cidade }}
                                             </p>
                                         {% endif %}
                                     </div>
@@ -58,7 +74,9 @@
             {% endfor %}
         </div>
     {% else %}
+        <br>
         <p>Nenhum médico encontrado.</p>
     {% endif %}
 </div>
+
 {% endblock %}

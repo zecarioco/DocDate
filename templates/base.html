@@ -125,6 +125,23 @@
             box-shadow: none;
             outline: none;
         }
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 1rem;
+            background-color: #ffb4b4;
+        }
+
+        .card-hover:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+        .navbar {
+            position: sticky;
+            top: 15px;
+            z-index: 1020;
+        }
+
     </style>
 </head>
 <body>
@@ -140,15 +157,12 @@
                     <span class="input-group-text bg-transparent border-0">
                         <i class="bi bi-search text-white"></i>
                     </span>
-                    <input name="q" class="form-control search-input" placeholder="Buscar médicos..." aria-label="Buscar">
+                    <input name="q" class="form-control search-input" placeholder="Buscar médicos..." aria-label="Buscar" value="{{ request.GET.q }}">
                 </div>
             </form>
     
             <div class="d-flex gap-3 align-items-center flex-wrap">
                 {% if user.is_authenticated %}
-                    <a href="/agenda/consultas/nova/" class="btn btn-light d-flex align-items-center">
-                        <i class="bi bi-calendar-plus me-2"></i> Agendar
-                    </a>
                     <a href="/agenda/consultas" class="btn btn-light d-flex align-items-center">
                         <i class="bi bi-calendar-check me-2"></i> Minhas Consultas
                     </a>

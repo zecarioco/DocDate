@@ -114,7 +114,15 @@ def logout_view(request):
 
 def home_view(request):
     user = request.user if request.user.is_authenticated else None
-    return render(request, 'home.html', {'user': user})
+    medicos_proximos = []
+
+    if user and user.cidade:
+        medicos_proximos = Medico.objects.filter(usuario__cidade=user.cidade)
+
+    return render(request, 'home.html', {
+        'user': user,
+        'medicos_proximos': medicos_proximos
+    })
 
 @login_required
 def editar_perfil_view(request):

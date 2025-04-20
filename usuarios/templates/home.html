@@ -1,39 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}DocDate{% endblock %}
-
 {% block content %}
-<style>
-    .img-ajustada {
-        max-height: 320px;
-        margin-top: -30px;
-    }
 
-    @media (min-width: 768px) {
-        .container {
-            padding-top: 1rem !important;
-        }
-    }
-</style>
 <div class="container py-3 mt-4">
     <div class="row align-items-center">
         <div class="col-md-6">
             <h2 class="mb-4 text-danger fw-bold">Bem-vindo ao <span class="text-dark">DocDate</span></h2>
             <p class="lead mb-3 fw-semibold">
-                O <span class="text-danger">DocDate</span> é um sistema completo para gestão de consultas médicas,
-                conectando pacientes e médicos de forma eficiente e segura.
+                O <span class="text-danger">DocDate</span> conecta pacientes e médicos de forma eficiente.
             </p>
             <p class="mb-4">
-                Nossa plataforma oferece <span class="fw-semibold">agendamento online</span>,
-                <span class="fw-semibold">prontuários eletrônicos</span> e ferramentas
-                para melhorar a experiência em saúde.
+                Nossa plataforma oferece <span class="fw-semibold">agendamento online</span> e
+                <span class="fw-semibold">acesso a profissionais por localização</span>.
             </p>
         </div>
-
         <div class="col-md-6 text-center">
-            <img src="{% static 'img/doctors.png' %}" alt="Médico ilustrativo" class="img-fluid img-ajustada">
+            <img src="{% static 'img/doctors.png' %}" alt="Médico ilustrativo" class="img-fluid" style="max-height: 320px; margin-top: -30px;">
         </div>
     </div>
+
+    {% if medicos_proximos %}
+    <div class="mt-5">
+        <h4 class="mb-4 fw-bold text-danger">Médicos disponíveis na sua região</h4>
+        
+        <div id="carrosselMedicos" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for medico in medicos_proximos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'perfil_medico' medico_id=medico.id %}" class="text-decoration-none text-dark">
+                                <div class="card border-0 shadow-sm hover-shadow card-hover">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-3 text-center p-3">
+                                            <img src="{% static 'img/logo.png' %}" alt="Foto de perfil"
+                                                 class="rounded-circle img-fluid" style="max-width: 80px;">
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-1 fw-bold text-danger">
+                                                    {{ medico.usuario.get_full_name }}
+                                                </h5>
+                                                <span class="badge badge-docdate">CRM: {{ medico.crm }}</span>
+                                                <p class="mb-1 mt-2">
+                                                    {% for esp in medico.especialidades.all %}
+                                                        {{ esp.nome }}{% if not forloop.last %}, {% endif %}
+                                                    {% empty %}
+                                                        Nenhuma
+                                                    {% endfor %}
+                                                </p>
+                                                {% if medico.clinica %}
+                                                    <p class="mb-1">Clínica {{ medico.clinica }}</p>
+                                                {% endif %}
+                                                {% if medico.usuario.cidade %}
+                                                    <p class="mb-0">
+                                                        <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
+                                                        {{ medico.usuario.cidade }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carrosselMedicos" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carrosselMedicos" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    {% else %}
+        <p class="text-center mt-4">Nenhum médico encontrado na sua região.</p>
+    {% endif %}
 </div>
 {% endblock %}

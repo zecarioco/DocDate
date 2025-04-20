@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Consulta
 from usuarios.models import Usuario, Medico
@@ -52,3 +53,45 @@ def excluir_consulta(request, consulta_id):
         consulta.delete()
         return redirect('listar_consultas')
     return render(request, 'confirmar_exclusao.html', {'consulta': consulta})
+
+def agendar_consulta(request, medico_id):
+    medico = get_object_or_404(Medico, id=medico_id)
+
+    if request.method == 'POST':
+        paciente_id = request.POST.get('paciente')
+        data_consulta = request.POST.get('data_consulta')
+        status = request.POST.get('status')
+        
+        consulta = Consulta.objects.create(
+            medico=medico,
+            paciente_id=paciente_id,
+            data_consulta=data_consulta,
+            status=status
+        )
+        
+        return redirect('listar_consultas')
+
+    return render(request, 'agendar_consulta.html', {'medico': medico})
+
+@login_required
+def agendar_consulta(request, medico_id):
+    medico = get_object_or_404(Medico, id=medico_id)
+    
+    if request.method == 'POST':
+        paciente = request.user
+        data_consulta = request.POST.get('data_consulta')
+        status = request.POST.get('status')
+        
+        if data_consulta:
+            data_consulta = timezone.make_aware(timezone.datetime.fromisoformat(data_consulta))
+
+        consulta = Consulta.objects.create(
+            medico=medico,
+            paciente=paciente,
+            data_consulta=data_consulta,
+            status=status
+        )
+        
+        return redirect('listar_consultas')
+
+    return render(request, 'agendar_consulta.html', {'medico': medico})

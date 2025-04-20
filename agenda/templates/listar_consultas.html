@@ -15,7 +15,7 @@
                         <div class="card-body p-4">
                             <h5 class="card-title fw-semibold" style="color: #2e2e2e;">
                                 {% if request.user.tipo_usuario == 'paciente' %}
-                                    {{ consulta.medico.especialidades.all.0 }} - Dr. {{ consulta.medico.usuario.get_full_name }}
+                                    Dr. {{ consulta.medico.usuario.get_full_name }}
                                 {% else %}
                                     Paciente: {{ consulta.paciente.get_full_name }}
                                 {% endif %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Agendar Consulta{% endblock %}
+
+{% block content %}
+    <h2 class="text-center fw-semibold mb-5" style="font-family: 'Inter', sans-serif; color: #c82333;">
+        Agendar Consulta
+    </h2>
+    <div class="container mt-3">
+        <div class="card border-0 shadow-sm card-hover p-4">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                    <img src="{% static 'img/logo.png' %}" alt="Foto" class="rounded-circle img-fluid" style="max-width: 150px;">
+                </div>
+                <div class="col-md-9">
+                    <h2 class="fw-bold text-danger">{{ medico.usuario.first_name }} {{ medico.usuario.last_name }}</h2>
+                    <p class="mb-1"><strong>CRM:</strong> {{ medico.crm }}</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <input type="hidden" name="paciente" value="{{ request.user.id }}">
+
+                        <div class="mb-3">
+                            <label for="data_consulta" class="form-label">Data da Consulta</label>
+                            <input type="datetime-local" class="form-control" id="data_consulta" name="data_consulta" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="agendada">Agendada</option>
+                                <option value="cancelada">Cancelada</option>
+                                <option value="realizada">Realizada</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success me-2">Salvar</button>
+                            <a href="{% url 'listar_consultas' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
