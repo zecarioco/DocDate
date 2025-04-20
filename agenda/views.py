@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Consulta
-from usuarios.models import Usuario, Medico
+from usuarios.models import Paciente, Usuario, Medico
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -68,6 +68,11 @@ def excluir_consulta(request, consulta_id):
 @login_required
 def agendar_consulta(request, medico_id):
     medico = get_object_or_404(Medico, id=medico_id)
+
+    try:
+        paciente = request.user.paciente
+    except Paciente.DoesNotExist:
+        return redirect('listar_consultas')
     
     if request.method == 'POST':
         paciente = request.user
