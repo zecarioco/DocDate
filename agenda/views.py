@@ -36,16 +36,27 @@ def editar_consulta(request, consulta_id):
     consulta = get_object_or_404(Consulta, id=consulta_id)
 
     if request.method == 'POST':
-        consulta.paciente = get_object_or_404(Usuario, id=request.POST.get('paciente'))
-        consulta.medico = get_object_or_404(Medico, id=request.POST.get('medico'))
+        paciente = get_object_or_404(Usuario, id=request.POST.get('paciente'))
+        medico = get_object_or_404(Medico, id=request.POST.get('medico'))
+        
+        consulta.paciente = paciente
+        consulta.medico = medico
         consulta.data_consulta = request.POST.get('data_consulta')
         consulta.status = request.POST.get('status')
+        
         consulta.save()
+        
         return redirect('listar_consultas')
 
     pacientes = Usuario.objects.filter(tipo_usuario='paciente')
     medicos = Medico.objects.all()
-    return render(request, 'form_consulta.html', {'consulta': consulta, 'pacientes': pacientes, 'medicos': medicos})
+    return render(request, 'agendar_consulta.html', {
+        'consulta': consulta,
+        'medico': consulta.medico,
+        'pacientes': pacientes,
+        'medicos': medicos
+    })
+
 
 def excluir_consulta(request, consulta_id):
     consulta = get_object_or_404(Consulta, id=consulta_id)
@@ -53,25 +64,6 @@ def excluir_consulta(request, consulta_id):
         consulta.delete()
         return redirect('listar_consultas')
     return render(request, 'confirmar_exclusao.html', {'consulta': consulta})
-
-def agendar_consulta(request, medico_id):
-    medico = get_object_or_404(Medico, id=medico_id)
-
-    if request.method == 'POST':
-        paciente_id = request.POST.get('paciente')
-        data_consulta = request.POST.get('data_consulta')
-        status = request.POST.get('status')
-        
-        consulta = Consulta.objects.create(
-            medico=medico,
-            paciente_id=paciente_id,
-            data_consulta=data_consulta,
-            status=status
-        )
-        
-        return redirect('listar_consultas')
-
-    return render(request, 'agendar_consulta.html', {'medico': medico})
 
 @login_required
 def agendar_consulta(request, medico_id):

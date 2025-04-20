@@ -18,28 +18,40 @@
 
                     <form method="POST">
                         {% csrf_token %}
-                        
-                        <input type="hidden" name="paciente" value="{{ request.user.id }}">
+
+                        <input type="hidden" name="paciente" value="{{ consulta.paciente.id|default:request.user.id }}">
+                        <input type="hidden" name="medico" value="{{ consulta.medico.id|default:request.user.id }}">
 
                         <div class="mb-3">
                             <label for="data_consulta" class="form-label">Data da Consulta</label>
-                            <input type="datetime-local" class="form-control" id="data_consulta" name="data_consulta" required>
+                            <input type="datetime-local" class="form-control rounded-3 border border-2" id="data_consulta"
+                                   name="data_consulta"
+                                   value="{{ consulta.data_consulta|date:'Y-m-d\\TH:i' }}" required
+                                   style="border-color: #3f704d;">
                         </div>
 
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="agendada">Agendada</option>
-                                <option value="cancelada">Cancelada</option>
-                                <option value="realizada">Realizada</option>
+                            <select class="form-select rounded-3 border border-2" id="status" name="status" required
+                                    style="border-color: #3f704d;">
+                                <option value="agendada" {% if consulta.status == 'agendada' %}selected{% endif %}>Agendada</option>
+                                <option value="cancelada" {% if consulta.status == 'cancelada' %}selected{% endif %}>Cancelada</option>
+                                <option value="realizada" {% if consulta.status == 'realizada' %}selected{% endif %}>Realizada</option>
                             </select>
                         </div>
 
                         <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-success me-2">Salvar</button>
-                            <a href="{% url 'listar_consultas' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn px-4 py-2 text-white"
+                                    style="background-color: #3f704d; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: 0.3s;">
+                                Salvar
+                            </button>
+                            <a href="{% url 'listar_consultas' %}"
+                               class="btn btn-outline-secondary px-4 py-2 ms-2"
+                               style="border-radius: 8px; transition: 0.3s;">
+                                Cancelar
+                            </a>
                         </div>
-                    </form>
+                    </form>                    
                 </div>
             </div>
         </div>
